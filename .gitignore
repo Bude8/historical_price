@@ -1,0 +1,4 @@
+# Created by .ignore support plugin (hsz.mobi)
+geckodriver.log
+venv/
+__pycache__/
