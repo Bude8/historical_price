@@ -1,25 +1,57 @@
 import requests
+from tabulate import tabulate
+from datetime import date
 
 
+def print_prices(product_list):
+    table = []
+    for product in product_list:
+        table.append([product.name, "£{:.2f}".format(product.price)])
+    print(tabulate(table, headers=["Name", "Price"]), "\n")
 
-def print_prices(name, price, date):
-    print("{} - £{:.2f} - {}".format(name, price, date))
+def get_payload_product(product_url):
+    split_string = product_url.split("/")
+    return split_string[-1]
 
 
 class Sainsburys:
-    def __init__(self, product_path):
-        self.base_url = "https://www.sainsburys.co.uk/groceries-api/gol-services/product/v1/product"
-        self.payload = {"filter[product_seo_url]": "gb/groceries/{}".format(product_path)}
-        self.response = requests.get(self.base_url, params=self.payload)
+    def __init__(self, product_url=None):
+        self.product_url = product_url
+        self.vendor = "Sainsbury's"
+
+        if product_url is not None:
+            self.base_url = "https://www.sainsburys.co.uk/groceries-api/gol-services/product/v1/product"
+            self.payload = {"filter[product_seo_url]": "gb/groceries/{}".format(get_payload_product(product_url))}
+            self.response = requests.get(self.base_url, params=self.payload)
+
         if self.response.status_code == 200:
-            self.name = self.response.json()['products'][0]['name']
-            self.price = float(self.response.json()['products'][0]['retail_price']['price'])
+            self.name = self._get_name(self.response)
+            self.price = self._get_price(self.response)
+
+    def _get_name(self, response):
+        return response.json()['products'][0]['name']
+
+    def _get_price(self, response):
+        return float(response.json()['products'][0]['retail_price']['price'])
 
 
 class Asos:
-    def __init__(self, product_path):
-        self.base_url = "https://www.asos.com/api/product/catalogue/v3/stockprice"
-        self.payload = {"productIds": "{}".format(product_path), "store": "COM"}
-        self.response = requests.get(self.base_url, params=self.payload)
+    def __init__(self, product_url=None):
+        self.product_url = product_url
+        self.vendor = "asos"
+
+        if product_url is not None:
+            self.base_url = "https://www.asos.com/api/product/catalogue/v3/stockprice"
+            self.payload = {"productIds": "{}".format(get_payload_product(product_url)), "store": "COM"}
+            self.response = requests.get(self.base_url, params=self.payload)
+
         if self.response.status_code == 200:
-            self.name = self.response.json()
+            self.name = self._get_name(product_url)
+            self.price = self._get_price(self.response)
+
+    def _get_name(self, product_url):
+        split_string = product_url.replace("-", " ").split("/")
+        return split_string[-3]
+
+    def _get_price(self, response):
+        return float(response.json()[0]['productPrice']['current']['value'])
