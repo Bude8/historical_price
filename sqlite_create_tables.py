@@ -25,7 +25,9 @@ c.execute(
     """
     CREATE TABLE products (
                 ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                Product TEXT
+                Product TEXT,
+                ProductURL TEXT,
+                UNIQUE (ProductURL)
                 )
     """
 )
@@ -36,7 +38,6 @@ c.execute(
                 ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 ProductID INTEGER,
                 VendorID INTEGER,
-                Product TEXT,
                 Price REAL,
                 Date TEXT,
                 FOREIGN KEY (ProductID) REFERENCES products (ID),
@@ -62,7 +63,9 @@ c.execute(
                 ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 UserID INTEGER,
                 ProductID INTEGER,
+                VendorID INTEGER,
                 FOREIGN KEY (ProductID) REFERENCES products (ID),
+                FOREIGN KEY (VendorID) REFERENCES vendors (ID),
                 FOREIGN KEY (UserID) REFERENCES users (ID)
                 )
     """

@@ -13,7 +13,7 @@ vendor_list = [sainsburys_list, asos_list]
 with Database('prices.db') as db:
     for vendor in vendor_list:
         db.insert_or_ignore_into_products_table(vendor)
-        db.insert_into_prices_table(vendor)
+        db.insert_or_ignore_into_prices_table(vendor)
 
 
 print("Today's prices:")
