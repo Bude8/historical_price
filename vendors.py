@@ -6,8 +6,9 @@ from datetime import date
 def print_prices(product_list):
     table = []
     for product in product_list:
-        table.append([product.name, "£{:.2f}".format(product.price)])
+        table.append([product.product_name, "£{:.2f}".format(product.price)])
     print(tabulate(table, headers=["Name", "Price"]), "\n")
+
 
 def get_payload_product(product_url):
     split_string = product_url.split("/")
@@ -25,10 +26,10 @@ class Sainsburys:
             self.response = requests.get(self.base_url, params=self.payload)
 
         if self.response.status_code == 200:
-            self.name = self._get_name(self.response)
+            self.product_name = self._get_product_name(self.response)
             self.price = self._get_price(self.response)
 
-    def _get_name(self, response):
+    def _get_product_name(self, response):
         return response.json()['products'][0]['name']
 
     def _get_price(self, response):
@@ -46,10 +47,10 @@ class Asos:
             self.response = requests.get(self.base_url, params=self.payload)
 
         if self.response.status_code == 200:
-            self.name = self._get_name(product_url)
+            self.product_name = self._get_product_name(product_url)
             self.price = self._get_price(self.response)
 
-    def _get_name(self, product_url):
+    def _get_product_name(self, product_url):
         split_string = product_url.replace("-", " ").split("/")
         return split_string[-3]
 
