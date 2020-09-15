@@ -62,9 +62,7 @@ c.execute(
                 ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 UserID INTEGER,
                 ProductID INTEGER,
-                VendorID INTEGER,
                 FOREIGN KEY (ProductID) REFERENCES products (ID),
-                FOREIGN KEY (VendorID) REFERENCES vendors (ID),
                 FOREIGN KEY (UserID) REFERENCES users (ID)
                 )
     """

@@ -43,7 +43,7 @@ class Database:
         return self.fetchall()
 
     def insert_product_into_products_table_if_new(self, product_list):
-        products = [{"product": product.product_name,
+        products = [{"product": product.name,
                      "url": product.product_url}
                     for product in product_list]
         self.cursor.executemany("""
@@ -56,22 +56,9 @@ class Database:
 
         product_list = [{"price": product.price,
                          "vendor": product.vendor,
-                         "product": product.product_name,
+                         "product": product.name,
                          "date": today}
                         for product in product_list]
-        # date is repeated for each product, can refactor? Would need to change execute lines
-
-        # The full statement after this only works if the product has an existing price in the prices table
-        # This statement performs the initial insert if required
-        # Potential to make this cleaner?
-        self.cursor.executemany("""
-                        INSERT OR IGNORE INTO prices (ProductID, VendorID, Price, Date)
-                        SELECT
-                               (SELECT ID FROM products WHERE Product = :product),
-                               (SELECT ID FROM vendors WHERE Vendor = :vendor),
-                               :price,
-                               :date
-                        """, product_list)
 
         self.cursor.executemany("""
                 INSERT OR IGNORE INTO prices (ProductID, VendorID, Price, Date)
@@ -80,22 +67,16 @@ class Database:
                        (SELECT ID FROM vendors WHERE Vendor = :vendor),
                        :price,
                        :date
-                WHERE EXISTS
+                WHERE NOT EXISTS
+                    (SELECT * FROM 
                     (SELECT v.Vendor, p.ID, p.Product, pr.Price, pr.Date
                     FROM prices pr
                     INNER JOIN vendors v ON pr.VendorID = v.ID
                     INNER JOIN products p ON pr.ProductID = p.ID
                     WHERE p.Product = :product
-                      AND v.Vendor = :vendor
-                      AND pr.Price != :price
-                      AND pr.Date != :date)
+                      AND v.Vendor = :vendor) 
+                    WHERE Price = :price)
                 """, product_list)
 
-        # self.cursor.executemany("""
-        # INSERT OR IGNORE INTO prices (ProductID, VendorID, Price, Date)
-        # VALUES
-        # ((SELECT ID from products WHERE Product=:product),
-        # (SELECT ID from vendors WHERE Vendor=:vendor),
-        # :price,
-        # :date)
-        # """, products)
+    def select(self):
+        pass

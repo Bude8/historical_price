@@ -6,7 +6,10 @@ from datetime import date
 def print_prices(product_list):
     table = []
     for product in product_list:
-        table.append([product.product_name, "£{:.2f}".format(product.price)])
+        try:
+            table.append([product.name, "£{:.2f}".format(product.price)])
+        except TypeError:
+            table.append([product.name, "N/A"])
     print(tabulate(table, headers=["Name", "Price"]), "\n")
 
 
@@ -26,14 +29,14 @@ class Sainsburys:
             self.response = requests.get(self.base_url, params=self.payload)
 
         if self.response.status_code == 200:
-            self.product_name = self._get_product_name(self.response)
+            self.name = self._get_product_name(self.response)
             self.price = self._get_price(self.response)
 
     def _get_product_name(self, response):
         return response.json()['products'][0]['name']
 
     def _get_price(self, response):
-        return float(response.json()['products'][0]['retail_price']['price'])
+            return float(response.json()['products'][0]['retail_price']['price'])
 
 
 class Asos:
@@ -47,7 +50,7 @@ class Asos:
             self.response = requests.get(self.base_url, params=self.payload)
 
         if self.response.status_code == 200:
-            self.product_name = self._get_product_name(product_url)
+            self.name = self._get_product_name(product_url)
             self.price = self._get_price(self.response)
 
     def _get_product_name(self, product_url):
@@ -55,4 +58,7 @@ class Asos:
         return split_string[-3]
 
     def _get_price(self, response):
-        return float(response.json()[0]['productPrice']['current']['value'])
+        try:
+            return float(response.json()[0]['productPrice']['current']['value'])
+        except IndexError:
+            return None
