@@ -52,12 +52,12 @@ class Database:
         """, products)
 
     def insert_price_into_prices_table_if_changed(self, product_list):
-        today = int(datetime.combine(date.today(), datetime.min.time()).timestamp())
+        today_unix = int(datetime.combine(date.today(), datetime.min.time()).timestamp())
 
         product_list = [{"price": product.price,
                          "vendor": product.vendor,
                          "product": product.name,
-                         "date": today}
+                         "date": today_unix}
                         for product in product_list]
 
         self.cursor.executemany("""
@@ -77,6 +77,11 @@ class Database:
                       AND v.Vendor = :vendor) 
                     WHERE Price = :price)
                 """, product_list)
+
+    def select_products_with_price_change_from_today(self, product_list):
+        today_unix = int(datetime.combine(date.today(), datetime.min.time()).timestamp())
+
+
 
     def select(self):
         pass
