@@ -82,6 +82,20 @@ class Database:
 
     def select_products_with_price_change_from_today(self, product_list):
         today_unix = int(datetime.combine(date.today(), datetime.min.time()).timestamp())
+        record_list = []
+
+        self.cursor.execute("""
+                            SELECT Product, CurrentPrice, PreviousPrice, ProductURL
+                            FROM vw_price_change
+                            WHERE Date = {}
+                            """.format(today_unix))
+
+        rows = self.cursor.fetchall()
+
+        for row in rows:
+            record_list.append(row)
+
+        return record_list
 
     def select(self):
         pass

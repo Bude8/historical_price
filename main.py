@@ -15,6 +15,11 @@ with Database('prices.db') as db:
     for products in vendor_products_list:
         db.insert_product_into_products_table_if_new(products)
         db.insert_price_into_prices_table_if_changed(products)
+        record_list = db.select_products_with_price_change_from_today(products)
+        if len(record_list) != 0:
+            pass
+        user_list = []
+
 
 print("Today's prices:")
 print("----------------- Sainsbury's -----------------")
