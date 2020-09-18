@@ -1,6 +1,5 @@
 import requests
 from tabulate import tabulate
-from datetime import date
 
 
 def print_prices(product_list):
@@ -36,7 +35,7 @@ class Sainsburys:
         return response.json()['products'][0]['name']
 
     def _get_price(self, response):
-            return float(response.json()['products'][0]['retail_price']['price'])
+        return float(response.json()['products'][0]['retail_price']['price'])
 
 
 class Asos:

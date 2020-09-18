@@ -1,15 +1,15 @@
 import sqlite3
 
-connection = sqlite3.connect('prices.db')
+connection = sqlite3.connect("../prices.db")
 
 c = connection.cursor()
 c.execute("pragma foreign_keys=ON;")
 
-c.execute("DROP TABLE IF EXISTS vendors;")
-c.execute("DROP TABLE IF EXISTS products;")
-c.execute("DROP TABLE IF EXISTS prices;")
-c.execute("DROP TABLE IF EXISTS users;")
-c.execute("DROP TABLE IF EXISTS tracking;")
+# c.execute("DROP TABLE IF EXISTS vendors;")
+# c.execute("DROP TABLE IF EXISTS products;")
+# c.execute("DROP TABLE IF EXISTS prices;")
+# c.execute("DROP TABLE IF EXISTS users;")
+# c.execute("DROP TABLE IF EXISTS tracking;")
 
 c.execute(
     """

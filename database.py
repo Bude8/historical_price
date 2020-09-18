@@ -83,7 +83,5 @@ class Database:
     def select_products_with_price_change_from_today(self, product_list):
         today_unix = int(datetime.combine(date.today(), datetime.min.time()).timestamp())
 
-
-
     def select(self):
         pass

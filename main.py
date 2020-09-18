@@ -1,5 +1,5 @@
-from vendors import *
 from database import Database
+from vendors import *
 
 url_list = [line.rstrip() for line in open("links.txt")]
 
