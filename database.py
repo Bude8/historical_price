@@ -74,7 +74,9 @@ class Database:
                     INNER JOIN vendors v ON pr.VendorID = v.ID
                     INNER JOIN products p ON pr.ProductID = p.ID
                     WHERE p.Product = :product
-                      AND v.Vendor = :vendor) 
+                      AND v.Vendor = :vendor
+                    ORDER BY Date DESC
+                    LIMIT 1) 
                     WHERE Price = :price)
                 """, product_list)
 
