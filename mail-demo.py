@@ -7,7 +7,7 @@ EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 
 msg = EmailMessage()
 msg['From'] = EMAIL_ADDRESS
-msg['To'] = "henryblee8@gmail.com"
+msg['To'] = "price.tracker.1337@gmail.com"
 msg['Subject'] = "Grab dinner this weekend?"
 msg.set_content("How about dinner at 6pm this Saturday?")
 
