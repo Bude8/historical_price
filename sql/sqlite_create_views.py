@@ -14,8 +14,8 @@ c.execute(
         AS
         SELECT pp.ID,
                pp.Product,
-            pp.CURRENT_PRICE,
-            pp.PREVIOUS_PRICE,
+            pp.CurrentPrice,
+            pp.PreviousPrice,
             pp.ProductURL,
             DATE(pp.Date, 'unixepoch', 'localtime') as Date
         FROM
@@ -33,7 +33,7 @@ c.execute(
                         ELSE NULL
                     END
                     )
-                    OVER(PARTITION BY rn.ProductID) AS "Current_Price",
+                    OVER(PARTITION BY rn.ProductID) AS "CurrentPrice",
                 MAX
                     (
                     CASE
@@ -42,7 +42,7 @@ c.execute(
                         ELSE NULL
                     END
                     )
-                    OVER(PARTITION BY rn.ProductID) AS "Previous_Price"
+                    OVER(PARTITION BY rn.ProductID) AS "PreviousPrice"
             FROM
                 (
                 SELECT ProductID,
@@ -56,7 +56,7 @@ c.execute(
                 ON rn.ProductID = prod.ID
             WHERE rn.RN_PRICE BETWEEN 1 AND 2
             ) pp
-        WHERE pp.Previous_Price IS NOT NULL
+        WHERE pp.PreviousPrice IS NOT NULL
         ORDER BY Date DESC;
         """
 )
